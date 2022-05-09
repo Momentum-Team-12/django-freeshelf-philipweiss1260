@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
 from django.urls import path, include
 from books import views as books_views
 
@@ -24,4 +25,10 @@ urlpatterns = [
     path('books/add/', books_views.add_book, name='add_book'),
     path('books/<int:pk>/', books_views.view_book, name='view_book'),
     path('books/<int:pk>/description', books_views.add_description, name='add_description'),
-    ] 
+    ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns

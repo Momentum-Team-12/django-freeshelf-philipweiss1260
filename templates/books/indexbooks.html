@@ -5,21 +5,21 @@
 
 <p><a href="{% url 'add_book' %}">Add New Book</a></p>
 
-<div class="flex flex-wrap">
+<div class="flex flex-column-reverse">
     {% for book in books %}
     <div class="w-33 pa3">
-        <h2>{{ book.author }}</h2>
+        <h2>{{ book.title }}</h2>
 
         <div class="flex">
-            <div class="pr2"><i class="icofont-location-pin"></i></div>
+            <div class="pr2"><i class="icofont-pen-alt-1"></i></div>
             <div>
-                {{ book.title }}
+                {{ book.author }}
             </div>
         </div>
 
         {% if book.year %}
         <div class="flex">
-            <div class="pr2"><i class="icofont-birthday"></i></div>
+            <div class="pr2"></div>
             <div>{{ book.year }}</div>
         </div>
         {% endif %}

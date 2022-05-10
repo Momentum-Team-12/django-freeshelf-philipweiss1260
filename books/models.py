@@ -1,6 +1,8 @@
-from nturl2path import url2pathname
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.forms import SlugField
+from django.template.defaultfilters import slugify
+from django.urls import reverse
 
 
 class User(AbstractUser):
@@ -16,9 +18,28 @@ class Book(models.Model):
     author      = models.CharField(max_length=255)
     url         = models.URLField(blank=True,null=True)
     description = models.TextField(null=True, blank=True)
-    date_added  = models.DateTimeField(auto_now_add=True)
+    category = models.ForeignKey('Category', related_name="books",
+    on_delete = models.CASCADE)
 
-class Description(models.Model):
-    text = models.CharField(max_length=5000)
-    created = models.DateTimeField(auto_now_add=True)
-    album = models.ForeignKey(Book, on_delete=models.CASCADE, related_name= "descriptions")
+    def __str__(self):
+        return self.title
+
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(null=False, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+    def get_absolute_url(self):
+        return reverse('category_detail', kwargs={'slug': self.slug})
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
+
+class Favorite(models.Model):
+    book = models.ForeignKey('Book', related_name="favorites",null=True, blank=True, on_delete = models.CASCADE)
+    user = models.ForeignKey("User", related_name='favorites',null=True, blank=True, on_delete = models.CASCADE)
+

@@ -18,8 +18,8 @@ class Book(models.Model):
     author      = models.CharField(max_length=255)
     url         = models.URLField(blank=True,null=True)
     description = models.TextField(null=True, blank=True)
-    category = models.ForeignKey('Category', related_name="books",
-    on_delete = models.CASCADE)
+    created_at  = models.DateTimeField(auto_now_add=True)
+    category    = models.ForeignKey('Category', related_name="books", on_delete = models.CASCADE)
 
     def __str__(self):
         return self.title
